@@ -38,9 +38,6 @@
     - zone.vars.bind_zone_type != 'secondary'
     - zone.vars.bind_zone_type != 'forward'
 
-- name: Debug | var bind_zone_name
-  ansible.builtin.debug:
-    var: zone.vars.bind_zone_name
 - name: Ensure named.conf.local-zones present
   ansible.builtin.template:
     src: "named-zones.conf.local.j2"
