@@ -4,7 +4,7 @@
   apt: name={{item}} state=present update_cache=yes
   with_items: "{{ bind_pkgs }}"
 
-- include: bind-apparmor.yml
+- import_tasks: bind-apparmor.yml
 
-- include: resolvconf.yml
+- import_tasks: resolvconf.yml
 
