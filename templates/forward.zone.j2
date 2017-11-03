@@ -5,9 +5,9 @@ $ORIGIN {{ zone.vars.bind_zone_name }}.
 $TTL {{ zone.vars.bind_zone_ttl }}
 
 {% if zone.vars.bind_zone_name_servers|length > 0 %}
-@ IN SOA {{ zone.vars.bind_zone_name_servers|first }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
+@ IN SOA {{ zone.vars.bind_zone_name_servers|first }}. {{ zone.vars.bind_zone_hostmaster_email }}. (
 {% else %}
-@ IN SOA {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
+@ IN SOA {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}. (
 {% endif %}
   ; Serial Alternative:
   ; * https://mastodon.social/@jpmens/114761717694211280 - 20250929 disappeared...
@@ -20,7 +20,7 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 
 {% if zone.vars.bind_zone_name_servers|length > 0 %}
 {% for ns in zone.vars.bind_zone_name_servers %}
-@                    IN  NS     {{ ns }}.{{ zone.vars.bind_zone_name }}.
+@                    IN  NS     {{ ns }}.
 {% endfor %}
 {% else %}
 @                    IN  NS     {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}.
