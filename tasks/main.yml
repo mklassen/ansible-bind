@@ -22,11 +22,11 @@
     )
 
 - name: Import debian
-  ansible.builtin.import_tasks: debian.yml
+  ansible.builtin.include_tasks: debian.yml
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Import redhat
-  ansible.builtin.import_tasks: redhat.yml
+  ansible.builtin.include_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
 
 - name: Install new named.conf options with dnssec
@@ -68,36 +68,36 @@
     - bind_dns_forward_default | bool
 
 - name: Import ipv6
-  ansible.builtin.import_tasks: ipv6.yml
+  ansible.builtin.include_tasks: ipv6.yml
   when: bind_disable_ipv6 is defined and bind_disable_ipv6
 
 - name: Import bind-rpz
-  ansible.builtin.import_tasks: bind-rpz.yml
+  ansible.builtin.include_tasks: bind-rpz.yml
   when: bind_rpz is defined and bind_rpz
 
 - name: Import bind-blackhole-malwaredomainslist
-  ansible.builtin.import_tasks: bind-blackhole-malwaredomainslist.yml
+  ansible.builtin.include_tasks: bind-blackhole-malwaredomainslist.yml
   when: bind_malwaredomainslist_blackhole is defined and bind_malwaredomainslist_blackhole
 
 - name: Import misp-integration
-  ansible.builtin.import_tasks: misp-integration.yml
+  ansible.builtin.include_tasks: misp-integration.yml
   when: bind_misp_apikey and bind_misp_url
 
 ## Centos7: can't replace named.conf when named-chroot active
 - name: Import peerdns
-  ansible.builtin.import_tasks: peerdns.yml
+  ansible.builtin.include_tasks: peerdns.yml
   when: ansible_os_family == "RedHat"
 
 # - meta: flush_handlers
 ## should be at the end, else can lose dns connectivity
 - name: Import resolvconf2
-  ansible.builtin.import_tasks: resolvconf2.yml
+  ansible.builtin.include_tasks: resolvconf2.yml
   when:
     - not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")
     - bind_set_nameserver_enable | bool
 
 - name: Import monitoring-nrpe
-  ansible.builtin.import_tasks: monitoring-nrpe.yml
+  ansible.builtin.include_tasks: monitoring-nrpe.yml
   when: bind_monitoring_nrpe is defined and bind_monitoring_nrpe
 
 - name: Final configuration validation
