@@ -3,17 +3,15 @@
 ## https://www.sbarjatiya.com/notes_wiki/index.php/Ansible_named-server_role_for_both_public_and_private_DNS
 ##      https://github.com/bertvv/ansible-role-bind/tree/master
 
-- name: Create zone forward files
+- name: Create zone forward files for {{ zone.vars.bind_zone_name }}
   template:
     src: "forward.zone.j2"
-    dest: "{{ bind_etc }}/db.{{item}}.zone"
+    dest: "{{ bind_etc }}/db.{{zone.vars.bind_zone_name}}.zone"
     owner: root
     group: "{{ bind_user }}"
     mode: '0644'
     backup: yes
-    validate: "named-checkzone {{ item }} %s"
-  with_items:
-    - "{{ zone.vars.bind_zone_name }}"
+    validate: "named-checkzone {{ zone.vars.bind_zone_name }} %s"
   notify:
     - restart bind
 
@@ -32,7 +30,6 @@
   notify:
     - restart bind
 
-- debug: var=zone.vars.bind_zone_name
 - name: ensure named.conf.local-zones present
   template:
     src: "named-zones.conf.local.j2"
