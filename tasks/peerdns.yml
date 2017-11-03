@@ -1,8 +1,5 @@
 ---
 
-- name: Debug | var ansible_all_ipv4_addresses
-  ansible.builtin.debug:
-    var: ansible_all_ipv4_addresses
 - name: Check network config
   ansible.builtin.command: "ifconfig -a"
   register: ifconfig
@@ -15,9 +12,6 @@
   register: netdir
   changed_when: false
   failed_when: false
-- name: Debug | var network-scripts
-  ansible.builtin.debug:
-    var: netdir.stdout_lines
 
 - name: Check if file exists
   ansible.builtin.stat:
