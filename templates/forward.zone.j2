@@ -27,7 +27,7 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 {% endfor %}
 
 {% for mail in zone.vars.bind_zone_mail_servers %}
-{% if loop.first %}@{% else %} {% endif %}                    IN  MX     {{ mail.preference}}  {{ mail.name }}.{{ zone.vars.bind_zone_name }}.
+{% if loop.first %}@{% else %} {% endif %}                    IN  MX     {{ mail.preference}}  {{ mail.name }}.
 {% endfor %}
 
 {% if zone.vars.bind_zone_hosts|length > 0 %}
