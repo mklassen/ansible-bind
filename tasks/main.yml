@@ -24,7 +24,9 @@
     - restart bind
 
 - block:
-    - include_tasks: "zones.yml zone={{ outer_item }}"
+    - include_tasks: zones.yml
+      vars:
+        zone: "{{ outer_item }}"
       with_items: "{{ bind_zones }}"
       loop_control:
         loop_var: outer_item
