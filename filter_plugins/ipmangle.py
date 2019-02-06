@@ -9,7 +9,7 @@ def ipmangle(d):
     >>> ipmangle('1.2.3.4', netmask='255.255.0.0')
     2.1
     """
-    items = unicode(d).split('.')
+    items = d.split('.')
     numpos = len(items)
     items.extend([u'0', u'0', u'0'])
 
