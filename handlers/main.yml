@@ -1,5 +1,9 @@
 ---
 
+- name: Reload apparmor bind  # noqa no-changed-when
+  ansible.builtin.command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
+  failed_when: false
+
 - name: Restart bind
   ansible.builtin.service:
     name: "{{ bind_svc }}"
@@ -8,6 +12,15 @@
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
+
+- name: Restart netplan
+  ansible.builtin.command: netplan apply
+  changed_when: true
+  when: >
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+        )
+     and (ansible_os_family|lower == 'debian' or ansible_distribution_major_version|int >= 18)
 
 - name: Restart resolvconf
   ansible.builtin.service:
@@ -27,7 +40,3 @@
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
     and (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version | int < 18)
-
-- name: Reload apparmor bind  # noqa no-changed-when
-  ansible.builtin.command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
-  failed_when: false
