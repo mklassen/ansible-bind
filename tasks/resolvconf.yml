@@ -27,4 +27,5 @@
     insertafter: '#supersede'
   notify:
     - Restart networking
+    - Restart netplan
   when: ansible_env['TRAVIS'] is not defined and dhclient.stat.exists
