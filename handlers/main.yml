@@ -20,6 +20,13 @@
   when:
     - not is_container
 
+- name: Restart netplan
+  ansible.builtin.command: netplan apply
+  changed_when: true
+  when:
+    - not is_container
+    - (ansible_os_family|lower == 'debian' or ansible_distribution_major_version|int >= 18)
+
 - name: Restart resolvconf
   ansible.builtin.service:
     name: resolvconf
