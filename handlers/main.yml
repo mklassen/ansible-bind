@@ -12,6 +12,15 @@
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
         )
+    and (ansible_os_family|lower != 'debian' or ansible_distribution_major_version|int <= 16)
+
+- name: restart netplan
+  command: netplan apply
+  when: >
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+        )
+     and (ansible_os_family|lower == 'debian' or ansible_distribution_major_version|int >= 18)
 
 - name: reload apparmor bind
   command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"

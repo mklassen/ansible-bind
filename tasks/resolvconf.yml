@@ -23,4 +23,5 @@
     insertafter: '#supersede'
   notify:
     - restart networking
+    - restart netplan
   when: ansible_env['TRAVIS'] is not defined
