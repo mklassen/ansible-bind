@@ -1,5 +1,9 @@
 ---
 
+- name: reload apparmor bind
+  command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
+  ignore_errors: true
+
 - name: restart bind
   service: name={{ bind_svc }} state=restarted
 
@@ -21,7 +25,3 @@
           (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
         )
      and (ansible_os_family|lower == 'debian' or ansible_distribution_major_version|int >= 18)
-
-- name: reload apparmor bind
-  command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
-  ignore_errors: true
