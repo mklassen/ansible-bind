@@ -48,6 +48,7 @@ logging {
         file "{{ bind_log }}/security.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
         severity debug;
         print-time yes;
+        print-category yes;
         print-severity yes;
     };
 
@@ -55,6 +56,7 @@ logging {
         file "{{ bind_log }}/requests.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
         severity info;
         print-time yes;
+        print-category yes;
         print-severity yes;
     };
 
@@ -62,7 +64,16 @@ logging {
         file "{{ bind_log }}/rpz.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
         severity info;
         print-time yes;
+        print-category yes;
         print-severity yes;
+    };
+
+    channel query-errors_log {
+        file "{{ bind_log }}/query-errors" versions 5 size 20m;
+        print-time yes;
+        print-category yes;
+        print-severity yes;
+        severity dynamic;
     };
 
     category default { default_namedlog; };
