@@ -1,6 +1,15 @@
 ---
 
 - block:
+    - name: debian | ensure bind9 default exists
+      copy:
+        content: ""
+        force: no
+        dest: /etc/default/bind9
+        owner: root
+        group: root
+        mode: 644
+
     - name: debian | disable ipv6
       replace:
         dest: /etc/default/bind9
