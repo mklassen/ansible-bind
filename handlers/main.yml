@@ -17,6 +17,7 @@
   ansible.builtin.service:
     name: "{{ bind_svc }}"
     state: restarted
+  register: bind_restarted
   when:
     - not is_container
 
