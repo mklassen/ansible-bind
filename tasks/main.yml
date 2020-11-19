@@ -86,3 +86,4 @@
 - name: Give little pause for bind initialization
   ansible.builtin.pause:
     seconds: 3
+  when: bind_restarted is defined and bind_restarted is changed

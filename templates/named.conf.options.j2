@@ -36,7 +36,9 @@ options {
         // If BIND logs error messages about the root key being expired,
         // you will need to update your keys.  See https://www.isc.org/bind-keys
         //========================================================================
-        //dnssec-enable yes;
+{% if ansible_distribution != 'Ubuntu' or (ansible_distribution_major_version|int < 20) %}
+        dnssec-enable yes;
+{% endif %}
         dnssec-validation {{ bind_dnssec_validation | lower }};
 
         auth-nxdomain no;    # conform to RFC1035

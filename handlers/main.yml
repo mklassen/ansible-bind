@@ -8,6 +8,7 @@
   ansible.builtin.service:
     name: "{{ bind_svc }}"
     state: restarted
+  register: bind_restarted
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
