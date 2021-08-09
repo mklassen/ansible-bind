@@ -7,7 +7,7 @@ bind_listen_ipv4:
 bind_listen_ipv6:
   - ::1
 
-bind_dns_forwarders: [ '8.8.8.8', '8.8.4.4' ]
+bind_dns_forwarders: ['8.8.8.8', '8.8.4.4']
 bind_dns_forward_only: true
 
 bind_dnssec_validation: 'yes'
@@ -53,7 +53,8 @@ bind_blackhole_tld:
 # https://www.circl.lu/doc/misp/automation/#rpz-export
 bind_misp_apikey: ''
 bind_misp_url: ''
-bind_misp_rpz_json_req: '{"request": {"eventId" : "false", "tags": ["OSINT", "!OUTDATED"], "policy": "walled-garden", "walled_garden": "127.0.0.5", "refresh": "5h"} }'
+bind_misp_rpz_json_req: '{"request": {"eventId" : "false",
+  "tags": ["OSINT", "!OUTDATED"], "policy": "walled-garden", "walled_garden": "127.0.0.5", "refresh": "5h"} }'
 
 bind_zones: []
 # binds_zones:
