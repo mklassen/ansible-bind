@@ -1,6 +1,36 @@
 {{ ansible_managed | comment(decoration="; ") }}
 ; Reverse zone file for {{ zone.vars.bind_zone_name }}
 ; vi: ft=bindzone
+{% set _zone_data = {'ttl': zone.vars.bind_zone_ttl,
+                     'name': item | ipmangle,
+                     'name_servers': zone.vars.bind_zone_name_servers,
+                     'other_name_servers': zone.vars.bind_other_name_servers,
+                     'mail_servers': zone.vars.bind_zone_mail_servers,
+                     'hostmaster_email': zone.vars.bind_zone_hostmaster_email,
+                     'refresh': zone.vars.bind_zone_time_to_refresh,
+                     'retry': zone.vars.bind_zone_time_to_retry,
+                     'expire': zone.vars.bind_zone_time_to_expire,
+                     'minimum_ttl': zone.vars.bind_zone_minimum_ttl,
+                     'hosts': zone.vars.bind_zone_hosts,
+                     'services': zone.vars.bind_zone_services,
+                     'text': zone.vars.bind_zone_text,
+                     } %}
+{% if zone.vars.bind_zone_name_servers|length < 1 %}
+{% set _ = _zone_data.update({'name_servers': [ansible_hostname + '.' + zone.vars.bind_zone_name]}) %}
+{% endif %}
+{% if zone.vars.bind_zone_hosts|length < 1 %}
+{% set _ = _zone_data.update({'hosts': [{'name': ansible_hostname, 'ip': ansible_default_ipv4.address}]}) %}
+{% endif %}
+{% set _zone_id = {'hash': _zone_data | string | hash('md5'),
+                   'serial': ansible_date_time.year | string + ansible_date_time.month | string +
+                             ansible_date_time.day | string + ansible_date_time.hour | string} %}
+{% if bind__zone_id | length > 1 %}
+{%   if _zone_id['hash'] == bind__zone_id[0] %}
+{%     set _ = _zone_id.update({'serial': bind__zone_id[1]}) %}
+{%   endif %}
+{% endif %}
+; Ansible Hash: {{ _zone_id['hash'] }} {{ _zone_id['serial'] }}
+
 {% set subnet_short = item | regex_replace('\/[0-9]*$', '') | regex_replace('\\.0$', '') %}
 
 $TTL {{ zone.vars.bind_zone_ttl }}
@@ -12,7 +42,7 @@ $ORIGIN {{ item | ipmangle }}
 {% else %}
 @ IN SOA {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}. (
 {% endif %}
-  {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ ansible_date_time.hour }}
+  {{ _zone_id['serial'] }}
   {{ zone.vars.bind_zone_time_to_refresh }}
   {{ zone.vars.bind_zone_time_to_retry }}
   {{ zone.vars.bind_zone_time_to_expire }}
@@ -29,7 +59,7 @@ $ORIGIN {{ item | ipmangle }}
 @                     IN  NS     {{ ns }}.
 {% endfor %}
 
-{% if zone.vars.bind_zone_hosts|length > 1 %}
+{% if zone.vars.bind_zone_hosts|length > 0 %}
 {% for host in zone.vars.bind_zone_hosts %}
 {% if host.ip == item %}
 @ IN  PTR  {{ host.name }}.{{ zone.vars.bind_zone_name }}.
