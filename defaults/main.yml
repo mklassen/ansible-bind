@@ -2,6 +2,8 @@
 
 bind_version: "Don't know..."
 
+bind_options: {}
+
 bind_listen_ipv4:
   - 127.0.0.1
 bind_listen_ipv6:
