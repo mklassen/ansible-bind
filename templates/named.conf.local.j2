@@ -117,3 +117,9 @@ include "{{ bind_etc }}/named-local-rpz.conf";
 include "{{ bind_etc }}/spywaredomains.zones";
 
 {% endif %}
+
+{% if bind_statistics | default(false) %}
+statistics-channels {
+   inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
+};
+{% endif %}
