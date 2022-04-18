@@ -27,8 +27,6 @@
 - name: Create reverse zones
   ansible.builtin.include_tasks: zones-reverse.yml
   with_items: "{{ zone.vars.bind_zone_networks }}"
-  notify:
-    - Restart bind
 
 - name: Ensure named.conf.local-zones present
   ansible.builtin.template:

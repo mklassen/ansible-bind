@@ -8,4 +8,4 @@
            inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
        };
   notify:
-    - restart bind
+    - Restart bind
