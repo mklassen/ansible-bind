@@ -55,6 +55,10 @@
   ansible.builtin.include_tasks: misp-integration.yml
   when: bind_misp_apikey and bind_misp_url
 
+- name: Include statistics
+  ansible.builtin.include_tasks: statistics.yml
+  when: bind_statistics | default(false)
+
 ## Centos7: can't replace named.conf when named-chroot active
 - name: Import peerdns
   ansible.builtin.include_tasks: peerdns.yml

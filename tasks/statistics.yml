@@ -1,0 +1,11 @@
+---
+- name: Add statistics channel
+  ansible.builtin.blockinfile:
+    dest: "{{ bind_etc }}/named.conf.local"
+    marker: '// {mark} ANSIBLE MANAGED BLOCK: statistics channel'
+    block: |
+       statistics-channels {
+           inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
+       };
+  notify:
+    - restart bind
