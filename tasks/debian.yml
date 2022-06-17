@@ -14,3 +14,10 @@
 - name: Import resolvconf
   ansible.builtin.include_tasks: resolvconf.yml
   when: not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")
+
+- name: Ensure write access to {{ bind_etc }}
+  ansible.builtin.file:
+    mode: g+w
+    group: "{{ bind_user }}"
+    state: directory
+    path: "{{ bind_etc }}"
