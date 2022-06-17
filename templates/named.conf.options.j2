@@ -44,6 +44,9 @@ options {
         dnssec-enable yes;
 {% endif %}
         dnssec-validation {{ bind_dnssec_validation | lower }};
+{% if bind_dnssec_policy | default(False) %}
+        dnssec-policy {{ bind_dnssec_policy | lower }};
+{% endif %}
 
         auth-nxdomain no;    # conform to RFC1035
 
