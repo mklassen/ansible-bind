@@ -1,0 +1,52 @@
+---
+# Commands to generate ZSK and KSK files
+# dnssec-keygen -a ECDSAP256SHA256 -n ZONE {{ zone.vars.bind_zone_name }}
+# dnssec-keygen -f KSK -a ECDSAP256SHA256 -n ZONE {{ zone.vars.bind_zone_name }}
+
+- name: Sign zone file for {{ zone.vars.bind_zone_name }}
+  ansible.builtin.include_tasks: sign.yml
+  when: zone.vars.bind_zone_ksk | default(False) and zone.vars.bind_zone_zsk | default(False)
+
+- name: Write KSK key to file
+  ansible.builtin.copy:
+    content: "{{ zone.vars.bind_zone_ksk.key }}"
+    dest: "{{ bind_etc }}/keys/K{{ zone.vars.bind_zone_name }}-ksk.key"
+    mode: '0400'
+    owner: root
+    group: bind
+
+- name: Write KSK private to file
+  ansible.builtin.copy:
+    content: "{{ zone.vars.bind_zone_ksk.private }}"
+    dest: "{{ bind_etc }}/keys/K{{ zone.vars.bind_zone_name }}-ksk.private"
+    mode: '0400'
+    owner: root
+    group: bind
+
+- name: Write ZSK key to file
+  ansible.builtin.copy:
+    content: "{{ zone.vars.bind_zone_zsk }}"
+    dest: "{{ bind_etc }}/keys/K{{ zone.vars.bind_zone_name }}-zsk.key"
+    mode: '0400'
+    owner: root
+    group: bind
+
+- name: Write KSK private to file
+  ansible.builtin.copy:
+    content: "{{ zone.vars.bind_zone_zsk.private }}"
+    dest: "{{ bind_etc }}/keys/K{{ zone.vars.bind_zone_name }}-zsk.private"
+    mode: '0400'
+    owner: root
+    group: bind
+
+- name: Sign the zone files
+  ansible.builtin.command:
+    cmd: >
+      dnssec-signzone
+      -3 {{ lookup("communit.general.random_string", length=16, override_all="0123456789ABCDEF") }}
+      -A -N keep -S -K {{ bind_etc }}/keys
+      -o {{ zone.vars.bind_zone_name }}
+      {{ bind_etc }}/db.{{ zone.vars.bind_zone_name }}.zone
+  chdir: "{{ bind_etc }}"
+  when: bind__zone_create is changed
+  changed_when: true
