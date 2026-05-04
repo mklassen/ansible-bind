@@ -5,6 +5,7 @@
     name: "{{ bind_pkgs }}"
     state: present
     update_cache: yes
+    cache_valid_time: 3600
   register: pkg_result
   until: pkg_result is success
 
