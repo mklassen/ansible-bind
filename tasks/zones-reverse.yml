@@ -18,6 +18,6 @@
     # validate: "named-checkzone {{ item | reverse_lookup_zone }} %s"
     validate: "named-checkzone {{ item | ipmangle }} %s"
   vars:
-    bind__zone_id: "{{ bind__zone_file['content'] | default('') | b64decode | regex_search('^; Ansible Hash: (.+) (.+)$', '\\1', '\\2', multiline=True) }}"
+    bind__zone_id: "{{ bind__zone_file['content'] | default('') | b64decode | regex_search('^; Ansible Hash: (.+) (.+)$', '\\1', '\\2', multiline=True) | default([], true) }}"
   notify:
     - Restart bind

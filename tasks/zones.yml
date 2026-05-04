@@ -22,7 +22,7 @@
   with_items:
     - "{{ zone.vars.bind_zone_name }}"
   vars:
-    bind__zone_id: "{{ bind__zone_file['content'] | default('') | b64decode | regex_search('^; Ansible Hash: (.+) (.+)$', '\\1', '\\2', multiline=True) }}"
+    bind__zone_id: "{{ bind__zone_file['content'] | default('') | b64decode | regex_search('^; Ansible Hash: (.+) (.+)$', '\\1', '\\2', multiline=True) | default([], true) }}"
   notify:
     - Restart bind
   when:
